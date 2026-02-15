@@ -1,28 +1,48 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers["authorization"];
+  const authHeader = req.headers["authorization"];
+
+  if (!authHeader) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  // Check format "Bearer <token>"
+  if (!authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const token = authHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(403).json({ message: "No token provided!" });
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
-  // Expecting format "Bearer <token>"
-  const tokenParts = token.split(" ");
-  if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
-      return res.status(401).json({ message: "Invalid token format!" });
-  }
-  
-  const jwtToken = tokenParts[1];
-
-  jwt.verify(jwtToken, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Unauthorized!" });
-    }
-    req.userId = decoded.userId;
-    req.userRole = decoded.role;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = {
+      userId: decoded.userId,
+      username: decoded.username,
+      role: decoded.role,
+    };
     next();
-  });
+  } catch (err) {
+    // Catches JsonWebTokenError, TokenExpiredError, NotBeforeError
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 };
 
-module.exports = verifyToken;
+const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Forbidden: You do not have access to this resource" });
+    }
+    next();
+  };
+};
+
+module.exports = {
+  verifyToken,
+  authorizeRoles,
+};
