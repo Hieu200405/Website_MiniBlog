@@ -1,13 +1,12 @@
 # Dependencies
 node_modules/
+pnpm-lock.yaml
+yarn.lock
 
 # Environment variables
 .env
 .env.*
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+!.env.example
 
 # Logs
 logs
@@ -16,6 +15,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
 # Editor directories and files
 .idea
@@ -35,16 +35,12 @@ pnpm-debug.log*
 ehthumbs.db
 Thumbs.db
 
-# Build output
+# Build output (Frontend & Backend)
 dist/
 build/
 coverage/
 .nyc_output/
+dist-ssr/
 
-# Test
-coverage/
-
-# Miscellaneous
-.git/
-.svn/
-.hg/
+# Vite specific
+*.local
