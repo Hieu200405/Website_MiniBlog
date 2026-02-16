@@ -1,90 +1,59 @@
-# Website MiniBlog - Backend
+# Website MiniBlog
 
-Đây là phần Backend cho dự án **Website MiniBlog**, được xây dựng bằng **Node.js** và **Express**, sử dụng **PostgreSQL** làm cơ sở dữ liệu.
-
-## 🛠 Công nghệ sử dụng
-
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: PostgreSQL (`pg`)
-- **Authentication**: JSON Web Token (JWT) & bcrypt (đang phát triển)
-- **Environment**: Dotenv
-- **CORS**: Cross-Origin Resource Sharing
+Dự án Blog cá nhân full-stack bao gồm **Backend (Node.js/Express)** và **Frontend (React/Vite)**.
 
 ## 📂 Cấu trúc dự án
 
 ```
 Website_MiniBlog/
-├── backend/
-│   ├── src/
-│   │   ├── config/         # Cấu hình Database, Environment...
-│   │   ├── controllers/    # Xử lý logic nghiệp vụ (Auth, Post...)
-│   │   ├── middleware/     # Các middleware (Auth check, Error handling...)
-│   │   ├── routes/         # Định nghĩa các API endpoints
-│   │   └── app.js          # Khởi tạo ứng dụng Express
-│   ├── .env                # Biến môi trường (không push lên git)
-│   ├── server.js           # Điểm khởi chạy server
-│   ├── package.json        # Dependencies & Scripts
-│   └── ...
-├── .gitignore              # Danh sách file bị loại bỏ khỏi git
-└── README.md               # Tài liệu dự án
+├── backend/          # Server Node.js, API, Database
+├── frontend/         # Giao diện ReactJS
+├── .gitignore        # Cấu hình git ignore toàn cục
+└── README.md         # Tài liệu dự án
 ```
 
-## 🚀 Cài đặt và Chạy dự án
+---
 
-### 1. Yêu cầu tiên quyết
+## 🛠 Backend (Node.js + PostgreSQL)
 
-- [Node.js](https://nodejs.org/) (phiên bản LTS được khuyến nghị)
-- [PostgreSQL](https://www.postgresql.org/) đã được cài đặt và đang chạy.
+### Cài đặt & Chạy
 
-### 2. Cài đặt Dependencies
+1.  Vào thư mục backend: `cd backend`
+2.  Cài đặt thư viện: `npm install`
+3.  Cấu hình môi trường:
+    - Copy `.env.example` thành `.env`
+    - Cập nhật thông tin DB (Host, User, Pass...)
+4.  Chạy server: `npm run dev`
+    - Server sẽ chạy tại: `http://localhost:5000`
 
-Di chuyển vào thư mục `backend` và cài đặt các thư viện:
+### Docker (Tùy chọn)
+
+Bạn có thể chạy toàn bộ Backend + Database bằng Docker:
 
 ```bash
 cd backend
-npm install
+docker-compose up --build
 ```
 
-### 3. Cấu hình biến môi trường
+---
 
-Tạo file `.env` trong thư mục `backend` và điền các thông tin sau (sử dụng thông tin database của bạn):
+## 🎨 Frontend (React + Vite)
 
-```env
-PORT=3000
-DB_HOST=localhost
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_NAME=miniblog_db
-DB_PORT=5432
-JWT_SECRET=your_secret_key
-```
+### Cài đặt & Chạy
 
-### 4. Chạy Server
+1.  Vào thư mục frontend: `cd frontend`
+2.  Cài đặt thư viện: `npm install`
+3.  Cấu hình môi trường:
+    - Tạo file `.env` với nội dung: `VITE_API_URL=http://localhost:5000`
+4.  Chạy ứng dụng: `npm run dev`
+    - Web sẽ mở tại: `http://localhost:5173`
 
-Để khởi động server (môi trường development):
+---
 
-```bash
-# Sử dụng nodemon (nếu đã cài global hoặc trong devDependencies)
-npx nodemon server.js
+## 🔑 Tài khoản Test (Mặc định)
 
-# Hoặc chạy bằng node thường
-node server.js
-```
-
-Server sẽ chạy tại: `http://localhost:3000` (hoặc port bạn đã cấu hình).
-
-## 📡 API Endpoints (Dự kiến)
-
-Dự án hiện đang có các routes cơ bản:
-
-- **Auth**: `/api/auth` (Đăng ký, Đăng nhập...)
-- **Posts**: `/api/posts` (CRUD bài viết...)
+Nếu bạn chạy Docker hoặc Database mới, hãy đăng ký tài khoản mới qua API hoặc giao diện.
 
 ## 🤝 Đóng góp
 
-Mọi đóng góp đều được hoan nghênh. Vui lòng tạo Pull Request hoặc mở Issue nếu phát hiện lỗi.
-
-## 📄 License
-
-ISC
+Pull requests are welcome!
