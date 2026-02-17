@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Posts from "./pages/Posts";
 
+// Protect
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { token } = useContext(AuthContext);
