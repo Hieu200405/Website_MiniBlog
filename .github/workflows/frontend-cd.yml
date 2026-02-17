@@ -35,6 +35,8 @@ jobs:
           file: ./frontend/Dockerfile.prod
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/miniblog-frontend:latest
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
 
     # Optional: Trigger Render Deploy Hook
     # - name: Trigger Render Deploy
