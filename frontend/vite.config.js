@@ -1,4 +1,4 @@
-// Trigger Frontend CI/CD
+// Trigger Frontend CI/CD again
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
