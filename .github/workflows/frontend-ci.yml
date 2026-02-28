@@ -40,3 +40,13 @@ jobs:
 
       - name: Build Docker Image
         run: docker build -t miniblog-frontend .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "miniblog-frontend"
+          format: "table"
+          exit-code: "1" # Ngăn chặn merge code nếu phát hiện lỗi CRITICAL/HIGH
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
