@@ -14,9 +14,11 @@ Dự án Blog cá nhân hoàn chỉnh bao gồm **Backend (Node.js/Express)**, *
 
 - **Frontend**: React.js, Vite, Axios, React Router DOM.
 - **Backend**: Node.js, Express.js, JWT, Bcrypt.
-- **Database**: PostgreSQL.
+- **Database**: PostgreSQL (With automatic migration).
 - **Testing**: Jest, Supertest.
-- **DevOps**: Docker, Docker Compose, GitHub Actions.
+- **DevOps (Basic)**: Docker, Docker Compose, GitHub Actions.
+- **DevSecOps (Advanced)**: Trivy Scanner, CodeQL SAST.
+- **Infrastructure as Code**: Terraform, NGINX API Gateway, Render Blueprints.
 
 ## 📂 Cấu trúc dự án
 

@@ -1,0 +1,56 @@
+# File Blueprint IaC Native của Render (Dùng thay thế nếu không chạy Terraform)
+# Lấy file này kết nối trực tiếp với tính năng "Blueprints" của Render.com
+
+services:
+  # Cấu hình Frontend
+  - type: web
+    name: miniblog-frontend-blueprint
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile.prod
+    dockerContext: ./frontend
+    plan: free
+    region: singapore
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: miniblog-backend-blueprint
+          type: web
+          property: url
+
+  # Cấu hình Backend
+  - type: web
+    name: miniblog-backend-blueprint
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: singapore
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: DB_HOST
+        fromDatabase:
+          name: miniblog-db-blueprint
+          property: host
+      - key: DB_USER
+        fromDatabase:
+          name: miniblog-db-blueprint
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: miniblog-db-blueprint
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: miniblog-db-blueprint
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+
+# Cấu hình Database
+databases:
+  - name: miniblog-db-blueprint
+    databaseName: blog_db
+    user: postgres
+    plan: free
+    region: singapore
