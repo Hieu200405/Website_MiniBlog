@@ -1,0 +1,33 @@
+# Default values for miniblog.
+replicaCount: 2
+
+image:
+  repository: mydockerhub/miniblog
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+backend:
+  name: backend
+  port: 5000
+  cpuRequest: 250m
+  memoryRequest: 256Mi
+
+frontend:
+  name: frontend
+  port: 80
+  cpuRequest: 100m
+  memoryRequest: 128Mi
+
+database:
+  name: db
+  image: postgres:15-alpine
+  storage: 1Gi
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: miniblog.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

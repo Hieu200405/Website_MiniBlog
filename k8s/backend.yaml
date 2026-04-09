@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: miniblog-backend
+  labels:
+    app: miniblog
+    component: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: miniblog
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: miniblog
+        component: backend
+    spec:
+      containers:
+      - name: backend
+        image: ${DOCKERHUB_USERNAME}/miniblog-backend:latest
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - secretRef:
+            name: backend-secrets
+        - configMapRef:
+            name: backend-config
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: miniblog-backend
+spec:
+  selector:
+    app: miniblog
+    component: backend
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
