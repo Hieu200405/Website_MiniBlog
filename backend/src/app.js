@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const os = require("os");
 const client = require("prom-client");
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 const authRoutes = require("./routes/auth.routes");
 const postRoutes = require("./routes/post.routes");
 const pool = require("./config/db");
@@ -9,7 +11,26 @@ const logger = require("./utils/logger");
 
 const app = express();
 
-// Prometheus Metrics Setup
+// --- Swagger Configuration ---
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'MiniBlog API (Elite Edition)',
+      version: '1.2.0',
+      description: 'A professional DevOps-centric blog API',
+    },
+    servers: [
+      { url: 'http://localhost:5000', description: 'Development server' },
+    ],
+  },
+  apis: ['./src/routes/*.js'], // Path to the API docs
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// --- Prometheus Metrics Setup ---
 const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ prefix: 'miniblog_' });
 const httpRequestDurationMicroseconds = new client.Histogram({
