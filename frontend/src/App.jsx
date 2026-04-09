@@ -5,6 +5,7 @@ import { AuthContext } from "./context/AuthContextObject";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Posts from "./pages/Posts";
+import Layout from "./components/Layout";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -12,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
   if (!token) {
     return <Navigate to="/login" replace />;
   }
-  return children;
+  return <Layout>{children}</Layout>;
 };
 
 // Public Route (redirects to posts if already logged in)
@@ -21,7 +22,7 @@ const PublicRoute = ({ children }) => {
   if (token) {
     return <Navigate to="/posts" replace />;
   }
-  return children;
+  return <Layout>{children}</Layout>;
 };
 
 function App() {
