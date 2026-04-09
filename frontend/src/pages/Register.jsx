@@ -1,58 +1,121 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContextObject";
 import { useNavigate, Link } from "react-router-dom";
+import { motion as Motion } from "framer-motion";
+import { UserPlus, User, Lock, AlertCircle, CheckCircle } from "lucide-react";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    const res = await register(username, password);
-    if (res.success) {
-      alert("Registration successful! Please login.");
-      navigate("/login");
-    } else {
-      setError(res.message);
+    setIsLoading(true);
+    try {
+      const res = await register(username, password);
+      if (res.success) {
+        setSuccess(true);
+        setTimeout(() => navigate("/login"), 2000);
+      } else {
+        setError(res.message);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", border: "1px solid #ccc" }}>
-      <h2>Register</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "10px" }}>
-          <label>Username:</label><br />
-          <input 
-            type="text" 
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            style={{ width: "100%", padding: "8px" }}
-            required
-          />
+    <div className="flex items-center justify-center min-h-[70vh]">
+      <Motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md p-8 glass rounded-3xl"
+      >
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/30">
+            <UserPlus size={32} className="text-white" />
+          </div>
+          <h2 className="text-3xl font-bold dark:text-white">Join the Community</h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">Create your DevOps profile</p>
         </div>
-        <div style={{ marginBottom: "10px" }}>
-          <label>Password:</label><br />
-          <input 
-            type="password" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: "100%", padding: "8px" }}
-            required
-          />
-        </div>
-        <button type="submit" style={{ width: "100%", padding: "10px", background: "green", color: "white" }}>
-          Register
-        </button>
-      </form>
-       <p style={{ marginTop: "10px" }}>
-        Already have an account? <Link to="/login">Login here</Link>
-      </p>
+
+        {error && (
+          <Motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="mb-6 p-4 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-2xl flex items-center gap-3 text-rose-600 dark:text-rose-400 text-sm"
+          >
+            <AlertCircle size={18} />
+            {error}
+          </Motion.div>
+        )}
+
+        {success && (
+          <Motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-2xl flex items-center gap-3 text-emerald-600 dark:text-emerald-400 text-sm font-medium"
+          >
+            <CheckCircle size={18} />
+            Registration successful! Redirecting to login...
+          </Motion.div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Username</label>
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <input 
+                type="text" 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Choose a username"
+                className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all dark:text-white"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <input 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Set a strong password"
+                className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all dark:text-white"
+                required
+              />
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={isLoading || success}
+            className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-500/30 transition-all active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2"
+          >
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : "Get Started"}
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-slate-600 dark:text-slate-400 text-sm">
+          Already have an account?{" "}
+          <Link to="/login" className="text-emerald-500 font-bold hover:underline">
+            Login here
+          </Link>
+        </p>
+      </Motion.div>
     </div>
   );
 };

@@ -17,7 +17,14 @@ services:
       - JWT_EXPIRES_IN=1h
       - BCRYPT_SALT_ROUNDS=10
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     networks:
       - blog-network
 
@@ -33,6 +40,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./backend/database.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d blog_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - blog-network
 
@@ -42,11 +54,12 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_URL=http://localhost:5000 # Frontend gọi Backend qua localhost của máy Host (vì chạy ở browser)
+      - VITE_API_URL=http://localhost:5000
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     volumes:
-      - ./frontend/src:/app/src # Hot Reload: map code local vào container
+      - ./frontend/src:/app/src
       - ./frontend/public:/app/public
       - ./frontend/index.html:/app/index.html
       - ./frontend/vite.config.js:/app/vite.config.js

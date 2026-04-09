@@ -1,21 +1,27 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+  }
+  
+  body.dark {
+    @apply bg-[#0f172a] text-slate-100;
+  }
 }
 
-h1,
-h2,
-h3 {
-  color: #333;
+/* Glassmorphism utility */
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
 }
 
-button {
-  cursor: pointer;
+.dark .glass {
+  @apply bg-slate-800/50 border-slate-700/50 shadow-2xl;
 }
 
-input,
-textarea {
-  box-sizing: border-box;
+/* Custom transitions */
+.page-transition {
+  @apply transition-all duration-500 ease-in-out;
 }
