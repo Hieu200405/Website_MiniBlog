@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # Giao diện Frontend Production
   frontend:
