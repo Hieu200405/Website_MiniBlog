@@ -1,7 +1,7 @@
 # --- Project MiniBlog DevOps Orchestrator ---
 # Standard Makefile for high-end DevOps systems
 
-.PHONY: help up down build test logs k8s-up k8s-down clean kind-setup
+.PHONY: help up down build test logs k8s-up k8s-down clean kind-setup argocd-setup
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -31,12 +31,21 @@ test-backend: ## Run backend unit tests
 test-load: ## Run k6 load tests (Requires k6 installed)
 	k6 run tests/load/performance.js
 
-# --- Kubernetes Commands ---
+# --- Kubernetes & GitOps Commands ---
 
 kind-setup: ## Initialize a local Kubernetes cluster using Kind
 	bash scripts/setup-kind.sh
 
-k8s-deploy: ## Deploy the entire stack to Kubernetes
+argocd-setup: ## Install ArgoCD and Argo Rollouts in the cluster
+	kubectl create namespace argocd || true
+	kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+	kubectl create namespace argo-rollouts || true
+	kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+
+gitops-deploy: ## Apply the ArgoCD Application manifest
+	kubectl apply -f gitops/miniblog-app.yaml
+
+k8s-deploy: ## Deploy using traditional manifests
 	kubectl apply -f k8s/
 
 k8s-status: ## Check status of all K8s resources
