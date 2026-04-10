@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: miniblog-backend-rollout
+spec:
+  replicas: 5
+  strategy:
+    canary:
+      steps:
+      - setWeight: 20
+        # Wait for manual approval or analysis before proceeding
+      - pause: { duration: 1h } 
+      - setWeight: 50
+      - pause: { duration: 30m }
+      - setWeight: 100
+  selector:
+    matchLabels:
+      app: miniblog
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: miniblog
+        component: backend
+    spec:
+      containers:
+      - name: backend
+        image: mydockerhub/miniblog-backend:latest
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
