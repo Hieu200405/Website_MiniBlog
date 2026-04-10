@@ -1,103 +1,80 @@
-# Website MiniBlog (Fullstack + CI/CD + Docker)
+# 🚀 MiniBlog: Elite DevOps & Fullstack Showcase
 
-Dự án Blog cá nhân hoàn chỉnh bao gồm **Backend (Node.js/Express)**, **Frontend (React/Vite)** và **Database (PostgreSQL)**. Dự án được tự động hóa bằng **Docker** và tích hợp **CI (GitHub Actions)**.
+[![Backend CI](https://github.com/Hieu200405/Website_MiniBlog/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/Hieu200405/Website_MiniBlog/actions)
+[![Frontend CI](https://github.com/Hieu200405/Website_MiniBlog/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/Hieu200405/Website_MiniBlog/actions)
+[![Security Scan](https://img.shields.io/badge/Security-Trivy%2FSnyk%2FCheckov-emerald)](https://github.com/Hieu200405/Website_MiniBlog/security)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🌟 Tính năng nổi bật
+MiniBlog is a high-end, production-ready Fullstack application designed as a **Gold Standard** for DevOps engineers. It integrates modern Web architecture with advanced automation, observability, and cloud-native practices.
 
-- **Fullstack**: Kiến trúc tách biệt Backend/Frontend.
-- **Authentication**: Đăng ký, Đăng nhập, JWT, Bảo mật mật khẩu.
-- **Dockerized**: Chạy toàn bộ hệ thống chỉ với 1 lệnh `docker-compose`.
-- **CI/CD**: Tự động test và build Docker image khi push code lên GitHub.
-- **Database**: PostgreSQL với script khởi tạo tự động.
+---
 
-## 🛠 Công nghệ sử dụng
+## 💎 Elite Features
 
-- **Frontend**: React.js, Vite, Axios, React Router DOM.
-- **Backend**: Node.js, Express.js, JWT, Bcrypt.
-- **Database**: PostgreSQL (With automatic migration).
-- **Testing**: Jest, Supertest.
-- **DevOps (Basic)**: Docker, Docker Compose, GitHub Actions.
-- **DevSecOps (Advanced)**: Trivy Scanner, CodeQL SAST.
-- **Infrastructure as Code**: Terraform, NGINX API Gateway, Render Blueprints.
+### 🎨 Modern Aesthetics
+- **Glossmorphism UI**: High-end React frontend built with **Tailwind CSS v4** and **Framer Motion**.
+- **DevOps Dashboard**: Real-time system status widget (API/DB health) integrated.
+- **Dark Mode**: Premium default dark theme for developer focus.
 
-## 📂 Cấu trúc dự án
+### 🛡️ DevSecOps & Quality
+- **Automated Security**: Integrated **Hadolint**, **Snyk**, **Checkov**, and **Trivy** in CI/CD.
+- **Policy Enforcement**: **OPA (Open Policy Agent)** rules to prevent root-privilege containers.
+- **Testing**: **Jest** integration tests, **k6** Load testing, and **Playwright** E2E user flow.
 
+### ☁️ Cloud Native & GitOps
+- **Kubernetes Ready**: Full manifests for **Deployment**, **Service**, **Ingress**, and **HPA**.
+- **Helm Charts**: Flexible configuration management for multi-environment deployments.
+- **GitOps Flow**: Configured for **ArgoCD** and **Argo Rollouts** (Canary Deployment).
+
+---
+
+## 🗺️ System Architecture (C4 Model)
+Explore detailed diagrams in [DOCS.md](./DOCS.md).
+
+---
+
+## 🚀 Quick Start (DevEx)
+
+Manage the entire system using our professional **Makefile**:
+
+```bash
+# 1. Start the system in development mode
+make up
+
+# 2. Start the Monitoring Stack (Grafana/Prometheus)
+make monitor
+
+# 3. Setup a local Kubernetes cluster (Kind)
+make kind-setup
+
+# 4. Run E2E Tests
+make test-e2e
 ```
+
+- **Frontend**: [http://localhost:5173](http://localhost:5173)
+- **Interactive API Docs**: [http://localhost:5000/api-docs](http://localhost:5000/api-docs) (Swagger UI)
+- **Grafana Dashboard**: [http://localhost:3001](http://localhost:3001) (admin/admin)
+
+---
+
+## 📂 Project Structure
+
+```bash
 Website_MiniBlog/
-├── backend/            # Mã nguồn Backend
-│   ├── tests/          # Unit & Integration Tests
-│   ├── Dockerfile
-│   └── ...
-├── frontend/           # Mã nguồn Frontend
-│   ├── Dockerfile
-│   └── ...
-├── .github/workflows/  # Cấu hình CI (Frontend + Backend)
-├── docker-compose.yml  # File điều phối Docker toàn cục
-├── .gitignore
-└── README.md
-```
-
-## //
-
-## 🚀 Chạy dự án (Khuyên dùng Docker)
-
-### Yêu cầu
-
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) đã cài đặt.
-
-### Các bước
-
-1.  Clone dự án về máy.
-2.  Tại thư mục gốc, chạy lệnh:
-    ```bash
-    docker-compose up --build
-    ```
-3.  Truy cập:
-    - **Frontend**: [http://localhost:5173](http://localhost:5173)
-    - **Backend API**: [http://localhost:5000](http://localhost:5000) (User `postgres` / Pass `root`)
-    - **Database**: Port `5433` (để tránh trùng với local DB).
-
----
-
-## ⚙️ CI/CD (GitHub Actions)
-
-Dự án đã tích hợp sẵn 2 workflows tự động:
-
-1.  **Backend CI**:
-    - Tự động chạy khi có thay đổi trong thư mục `backend/`.
-    - Cài đặt môi trường -> Chạy Test (`npm test`) với Database ảo -> Build Docker Image.
-2.  **Frontend CI**:
-    - Tự động chạy khi có thay đổi trong thư mục `frontend/`.
-    - Cài đặt môi trường -> Build Project (`npm run build`) -> Build Docker Image.
-
-Để kích hoạt, bạn chỉ cần push code lên GitHub:
-
-```bash
-git push origin main
+├── backend/            # Express API + Winston + Prom-client
+├── frontend/           # React + Tailwind v4 + Playwright
+├── k8s/                # Kubernetes Manifests (Prod-ready)
+├── helm/               # Helm Charts (IaC)
+├── monitoring/         # Prometheus & Grafana Configs
+├── security/           # OPA Policies & Vault Sidecar
+├── scripts/            # Automation (Kind, Setup)
+├── tests/              # Load Testing (k6)
+├── Makefile            # Project Orchestrator
+└── README.md           # This document
 ```
 
 ---
 
-## 📡 API Endpoints
+## 🤝 Contribution & License
 
-| Method     | Endpoint         | Mô tả             | Auth |
-| :--------- | :--------------- | :---------------- | :--- |
-| **POST**   | `/auth/register` | Đăng ký           | ❌   |
-| **POST**   | `/auth/login`    | Đăng nhập         | ❌   |
-| **GET**    | `/posts`         | Xem danh sách bài | ❌   |
-| **POST**   | `/posts`         | Đăng bài          | ✅   |
-| **PUT**    | `/posts/:id`     | Sửa bài           | ✅   |
-| **DELETE** | `/posts/:id`     | Xóa bài           | ✅   |
-
-## 🧪 Testing
-
-Để chạy test backend thủ công (không qua Docker):
-
-```bash
-cd backend
-npm test
-```
-
-## 🤝 Đóng góp
-
-Dự án phục vụ mục đích học tập. Pull Request được chào đón!
+This project is open-source under the MIT License. Built with ❤️ for the DevOps Community.
