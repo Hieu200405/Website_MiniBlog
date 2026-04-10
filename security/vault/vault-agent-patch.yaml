@@ -1,0 +1,25 @@
+# --- Vault Sidecar Injection Example ---
+# This manifest shows how to securely inject secrets from HashiCorp Vault 
+# directly into the application container without using .env files.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: miniblog-backend-secure
+  annotations:
+    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/role: "miniblog-role"
+    vault.hashicorp.com/agent-inject-secret-config: "secret/data/miniblog/config"
+    # Template to format the secret as an environment file
+    vault.hashicorp.com/agent-inject-template-config: |
+      {{- with secret "secret/data/miniblog/config" -}}
+      export DB_PASSWORD="{{ .Data.data.db_password }}"
+      export JWT_SECRET="{{ .Data.data.jwt_secret }}"
+      {{- end -}}
+spec:
+  template:
+    spec:
+      containers:
+      - name: backend
+        command: ["/bin/sh", "-c"]
+        args: ["source /vault/secrets/config && npm start"]
