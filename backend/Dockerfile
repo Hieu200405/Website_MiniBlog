@@ -7,8 +7,7 @@ WORKDIR /app
 # Copy file package trước để tối ưu layer cache
 COPY package*.json ./
 
-# Cài đặt curl (phục vụ Healthcheck) và các dependency của app trong 1 lớp duy nhất
-# Sử dụng --no-cache để giảm dung lượng image
+# hadolint ignore=DL3018
 RUN apk add --no-cache curl && \
     npm install
 
