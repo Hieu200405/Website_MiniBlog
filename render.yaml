@@ -1,10 +1,9 @@
-# File Blueprint IaC Native của Render (Dùng thay thế nếu không chạy Terraform)
-# Lấy file này kết nối trực tiếp với tính năng "Blueprints" của Render.com
+# Render Blueprint IaC - Elite Edition (Using External Neon.tech DB)
 
 services:
-  # Cấu hình Frontend
+  # 1. Frontend Configuration
   - type: web
-    name: miniblog-frontend-blueprint
+    name: miniblog-frontend
     env: docker
     dockerfilePath: ./frontend/Dockerfile.prod
     dockerContext: ./frontend
@@ -13,44 +12,27 @@ services:
     envVars:
       - key: VITE_API_URL
         fromService:
-          name: miniblog-backend-blueprint
+          name: miniblog-backend
           type: web
-          property: url
+          property: host # Changed from 'url' to 'host' to fix Render error
 
-  # Cấu hình Backend
+  # 2. Backend Configuration
   - type: web
-    name: miniblog-backend-blueprint
+    name: miniblog-backend
     env: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     plan: free
     region: singapore
     envVars:
+      - key: DATABASE_URL
+        sync: false # Requires manual entry on first deploy for security
+        placeholder: "postgresql://user:pass@ep-hostname.aws.neon.tech/dbname?sslmode=require"
       - key: PORT
         value: 5000
-      - key: DB_HOST
-        fromDatabase:
-          name: miniblog-db-blueprint
-          property: host
-      - key: DB_USER
-        fromDatabase:
-          name: miniblog-db-blueprint
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: miniblog-db-blueprint
-          property: password
-      - key: DB_NAME
-        fromDatabase:
-          name: miniblog-db-blueprint
-          property: database
       - key: JWT_SECRET
         generateValue: true
-
-# Cấu hình Database
-databases:
-  - name: miniblog-db-blueprint
-    databaseName: blog_db
-    user: postgres
-    plan: free
-    region: singapore
+      - key: NODE_ENV
+        value: production
+      - key: DB_SSL
+        value: "true"

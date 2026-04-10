@@ -1,0 +1,15 @@
+name: CD - Auto Deploy to Render
+
+on:
+  push:
+    branches: [Dev] # Hoặc master/main tùy bạn
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Chỉ chạy deploy nếu CI (build/test) đã thành công
+    steps:
+      - name: Trigger Render Deploy Hook
+        if: github.ref == 'refs/heads/Dev'
+        run: |
+          curl -X GET "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"

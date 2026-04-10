@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy file package để cài dependency trước (tối ưu cache)
 COPY package*.json ./
 
+# Cài đặt curl để phục vụ Healthcheck
+RUN apk add --no-cache curl
+
 # Cài đặt thư viện
 RUN npm install
 
