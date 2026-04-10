@@ -2,14 +2,26 @@ name: CD - Auto Deploy to Render
 
 on:
   push:
-    branches: [Dev] # Hoặc master/main tùy bạn
+    branches: [Dev] 
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Chỉ chạy deploy nếu CI (build/test) đã thành công
     steps:
-      - name: Trigger Render Deploy Hook
-        if: github.ref == 'refs/heads/Dev'
+      # 1. Trigger Deploy cho Backend
+      - name: Trigger Backend Deploy
+        if: env.BACKEND_URL != ''
         run: |
-          curl -X GET "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+          echo "🚀 Triggering Backend Deploy..."
+          curl -X GET "${{ env.BACKEND_URL }}"
+        env:
+          BACKEND_URL: ${{ secrets.RENDER_BACKEND_HOOK_URL }}
+
+      # 2. Trigger Deploy cho Frontend
+      - name: Trigger Frontend Deploy
+        if: env.FRONTEND_URL != ''
+        run: |
+          echo "🚀 Triggering Frontend Deploy..."
+          curl -X GET "${{ env.FRONTEND_URL }}"
+        env:
+          FRONTEND_URL: ${{ secrets.RENDER_FRONTEND_HOOK_URL }}

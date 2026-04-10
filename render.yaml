@@ -1,12 +1,13 @@
-# Render Blueprint IaC - Elite Edition (Using External Neon.tech DB)
+# Render Blueprint - Docker Hub Edition
+# Luồng: Code -> GitHub CI -> Docker Hub -> Render (Pull Image)
 
 services:
   # 1. Frontend Configuration
   - type: web
     name: miniblog-frontend
     env: docker
-    dockerfilePath: ./frontend/Dockerfile.prod
-    dockerContext: ./frontend
+    # Lưu ý: Thay 'hieu200405' bằng username Docker Hub thực tế của bạn nếu khác
+    image: hieu200405/miniblog-frontend:latest 
     plan: free
     region: singapore
     envVars:
@@ -14,19 +15,18 @@ services:
         fromService:
           name: miniblog-backend
           type: web
-          property: host # Changed from 'url' to 'host' to fix Render error
+          property: host
 
   # 2. Backend Configuration
   - type: web
     name: miniblog-backend
     env: docker
-    dockerfilePath: ./backend/Dockerfile
-    dockerContext: ./backend
+    image: hieu200405/miniblog-backend:latest
     plan: free
     region: singapore
     envVars:
       - key: DATABASE_URL
-        sync: false # Requires manual entry on first deploy for security
+        sync: false
         placeholder: "postgresql://user:pass@ep-hostname.aws.neon.tech/dbname?sslmode=require"
       - key: PORT
         value: 5000
