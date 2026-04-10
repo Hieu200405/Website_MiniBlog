@@ -31,6 +31,9 @@ test-backend: ## Run backend unit tests
 test-load: ## Run k6 load tests (Requires k6 installed)
 	k6 run tests/load/performance.js
 
+test-e2e: ## Run Playwright E2E tests
+	cd frontend && npx playwright test
+
 # --- Kubernetes & GitOps Commands ---
 
 kind-setup: ## Initialize a local Kubernetes cluster using Kind
