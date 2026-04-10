@@ -4,16 +4,14 @@ FROM node:22-alpine
 # Thiết lập thư mục làm việc trong container
 WORKDIR /app
 
-# Copy file package để cài dependency trước (tối ưu cache)
+# Copy file package trước để tối ưu layer cache
 COPY package*.json ./
 
-# Cài đặt curl để phục vụ Healthcheck
-RUN apk add --no-cache curl
+# hadolint ignore=DL3018
+RUN apk add --no-cache curl && \
+    npm install
 
-# Cài đặt thư viện
-RUN npm install
-
-# Copy toàn bộ code nguồn vào container
+# Copy toàn bộ code nguồn
 COPY . .
 
 # Mở port 5000
