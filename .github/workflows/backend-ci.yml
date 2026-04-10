@@ -78,15 +78,28 @@ jobs:
         # Đảm bảo bạn có script test trong package.json
         run: npm test
 
-      - name: Build Docker Image
-        run: docker build -t miniblog-backend .
+      - name: Login to Docker Hub
+        # Chỉ đẩy lên Docker Hub khi push vào nhánh chính
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Backend Image
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/miniblog-backend:latest
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "miniblog-backend"
+          image-ref: "${{ secrets.DOCKERHUB_USERNAME }}/miniblog-backend:latest"
           format: "table"
-          exit-code: "0" # Chỉ in ra cảnh báo, KHÔNG chặn luồng CI
+          exit-code: "0"
           ignore-unfixed: true
           vuln-type: "os,library"
           severity: "CRITICAL,HIGH"
