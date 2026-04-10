@@ -1,7 +1,7 @@
 # --- Project MiniBlog DevOps Orchestrator ---
 # Standard Makefile for high-end DevOps systems
 
-.PHONY: help up down build test logs k8s-up k8s-down clean
+.PHONY: help up down build test logs k8s-up k8s-down clean kind-setup
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -32,6 +32,9 @@ test-load: ## Run k6 load tests (Requires k6 installed)
 	k6 run tests/load/performance.js
 
 # --- Kubernetes Commands ---
+
+kind-setup: ## Initialize a local Kubernetes cluster using Kind
+	bash scripts/setup-kind.sh
 
 k8s-deploy: ## Deploy the entire stack to Kubernetes
 	kubectl apply -f k8s/
