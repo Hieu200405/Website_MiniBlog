@@ -69,3 +69,4 @@ volumes:
 
 networks:
   blog-network:
+    name: blog-network

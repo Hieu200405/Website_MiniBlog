@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   prometheus:
     image: prom/prometheus:latest
@@ -29,4 +27,4 @@ services:
 
 networks:
   blog-network:
-    external: true
+    name: blog-network
