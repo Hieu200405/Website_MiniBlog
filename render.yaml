@@ -15,7 +15,7 @@ services:
         fromService:
           name: miniblog-backend
           type: web
-          property: host
+          property: url
 
   # 2. Backend Configuration
   - type: web
