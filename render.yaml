@@ -12,10 +12,8 @@ services:
     region: singapore
     envVars:
       - key: VITE_API_URL
-        fromService:
-          name: miniblog-backend
-          type: web
-          property: url
+        sync: false
+        placeholder: "https://your-backend-service.onrender.com"
 
   # 2. Backend Configuration
   - type: web
