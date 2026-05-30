@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// 1. Tạo instance
+// 1. Tạo instance (Base URL được nhúng động từ VITE_API_URL khi build)
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
   headers: {
