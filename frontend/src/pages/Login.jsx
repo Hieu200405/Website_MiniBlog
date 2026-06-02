@@ -40,7 +40,7 @@ const Login = () => {
             <LogIn size={32} className="text-white" />
           </div>
           <h2 className="text-3xl font-bold dark:text-white">Welcome Back</h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-2">Log in to manage your DevOps blog</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">Log in to manage your blog</p>
         </div>
 
         {error && (
